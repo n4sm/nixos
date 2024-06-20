@@ -19,12 +19,10 @@
     ungoogled-chromium
     pavucontrol
     
-    # i3
-    i3status
-    i3lock
+    # gui packages 
     rofi
+    font-awesome
     maim
-    feh
     nitrogen
   ];
 
@@ -34,10 +32,49 @@
     enableCompletion = true;
   };
 
+  programs.git = {
+    userEmail = "n4sm@pm.me";
+    userName = "n4sm";
+    enable = true;
+  };
+  
+  # i3status-rust
+
+  programs.i3status-rust = {
+      enable = true;
+      bars = {
+        top = {
+		blocks = [
+		     {
+		       block = "time";
+		       interval = 60;
+		       format = " $timestamp.datetime(f:'%a %d/%m %R') ";
+		     }
+		  ];
+	  settings = {
+	    theme =  {
+	      theme = "nord-dark";
+	    };
+	  };
+	  #icons = "awesome5";
+	  theme = "nord-dark";
+        };
+      };
+    };
+
+  xsession.windowManager.i3.config = {
+    bars = [
+      {
+        position = "top";
+        statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-top.toml";
+      }
+    ];
+  };
+
   imports = [ 
-	(./i3.nix)
-	(./xterm.nix)
-     ];
+    (./i3.nix)
+    (./xterm.nix)
+  ];
 
   home.stateVersion = "23.11";
 }

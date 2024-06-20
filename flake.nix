@@ -7,7 +7,12 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, ... }: 
+let
+      forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
+
+
+in {
     nixosConfigurations = {
       off = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -22,5 +27,10 @@
         ];
       };
     };
+
+    devShells = forAllSystems (
+        system: import ./dev-shells { pkgs = nixpkgs.legacyPackages.${system}; }
+      );
+
   };
 }

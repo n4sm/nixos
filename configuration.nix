@@ -5,7 +5,7 @@
 { config, pkgs, ... }:
 
 let 
-  wallpaper_mini = "/etc/nixos/assets/wallpaper.jpg"; 
+  wallpaper_mini = "/etc/nixos/assets/wallpaper_mini.jpg"; 
 in {
   imports =
     [ # Include the results of the hardware scan.
@@ -51,7 +51,13 @@ in {
     enable = true;
     windowManager.i3.enable = true;
     xkb.variant = "";
-  
+ 
+    windowManager.i3.extraPackages = with pkgs; [
+        i3status
+        i3status-rust
+        i3lock
+    ];
+
     displayManager.lightdm = {
 	enable = true;
 
@@ -81,11 +87,6 @@ in {
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
