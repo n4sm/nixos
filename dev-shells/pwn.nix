@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, packages, ... }:
 let
   pythonEnv = pkgs.python310.withPackages (ps: [
     ps.pwntools
@@ -7,14 +7,15 @@ let
     ps.numpy
   ]);
 in pkgs.mkShell {
-  packages = with pkgs; [
+  packages = [
     pythonEnv
-    python310
+    pkgs.python310
   
-    patchelf
-    one_gadget
-    pwndbg
-    pwninit 
-    gef
+    pkgs.patchelf
+    pkgs.one_gadget
+    pkgs.pwndbg
+    pkgs.pwninit 
+    pkgs.gef
+    packages."x86_64-linux".gefpp
   ];
 }

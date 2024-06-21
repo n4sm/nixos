@@ -12,7 +12,7 @@ let
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
 
-in {
+in rec {
     nixosConfigurations = {
       off = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -28,9 +28,14 @@ in {
       };
     };
 
-    devShells = forAllSystems (
-        system: import ./dev-shells { pkgs = nixpkgs.legacyPackages.${system}; }
+
+   packages = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in import ./pkgs { inherit pkgs; }
       );
 
+    devShells = forAllSystems (
+        system: import ./dev-shells { pkgs = nixpkgs.legacyPackages.${system}; inherit packages; }
+      );
   };
 }

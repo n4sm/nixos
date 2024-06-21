@@ -87,6 +87,9 @@ in {
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  
+  nix.gc.automatic = true;
+  nix.settings.auto-optimise-store = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
