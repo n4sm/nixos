@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, packages, lib, ... }:
 
 {
   # Let Home Manager install and manage itself.
@@ -24,7 +24,11 @@
     font-awesome
     maim
     nitrogen
-  ];
+ 
+    ghidra
+    obs-studio
+    mpv
+  ] ++ [packages."x86_64-linux".ida-free];
 
   programs.bash = {
     enable = true;
