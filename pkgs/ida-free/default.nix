@@ -1,3 +1,7 @@
+/*
+Taken from @0poss (https://github.com/0poss/nix-config)
+*/
+
 {
   lib,
   stdenv,
