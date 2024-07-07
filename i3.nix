@@ -2,6 +2,7 @@
 
 let 
   wallpaper = "/etc/nixos/assets/wallpaper.jpg"; 
+  wallpaper_i3lock = "/etc/nixos/assets/wallpaper_i3lock.png"; 
   mod = "Mod4";
 in {
 
@@ -21,18 +22,17 @@ in {
         "${mod}+semicolon" = "focus right";
 
 	"${mod}+d" = "exec sh -c '${pkgs.rofi}/bin/rofi -modi drun -show drun'";
-	"${mod}+Shift+x" = "exec sh -c '${pkgs.i3lock}/bin/i3lock'";
+	"${mod}+Shift+x" = "exec sh -c '${pkgs.i3lock}/bin/i3lock -i ${wallpaper_i3lock}'";
         "${mod}+Shift+Return" = "exec sh -c 'firefox'";
       };
 
-      # Adding the wallpaper
+      # Adding the wallpaper and starting kime for korean input 
       startup = [
         { command = "${pkgs.nitrogen}/bin/nitrogen --set-scaled --save ${wallpaper}"; always = true; }
+        { command = "${pkgs.kime}/bin/kime-xim"; always = true; notification = false; }
       ];
     };
 
     extraConfig = "default_border none\n";
   };
-
-  
 }

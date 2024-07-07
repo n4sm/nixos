@@ -28,7 +28,16 @@
     ghidra
     obs-studio
     mpv
+
+
+    d2coding
+    xorg.libxcb.dev
+    fontconfig
   ] ++ [packages."x86_64-linux".ida-free];
+
+
+  fonts.fontconfig.enable = true;
+  fonts.fontconfig.defaultFonts = { monospace = [ "D2Coding" ]; sansSerif = ["Noto Sans CJK KR" "Fira Sans Book" "Noto Sans" ]; };
 
   programs.bash = {
     enable = true;
@@ -44,7 +53,7 @@
   
   # i3status-rust
 
-  programs.i3status-rust = {
+  /*programs.i3status-rust = {
       enable = true;
       bars = {
         top = {
@@ -60,18 +69,20 @@
 	      theme = "nord-dark";
 	    };
 	  };
-	  #icons = "awesome5";
+	  icons = "awesome5";
 	  theme = "nord-dark";
         };
       };
     };
-
+*/
+  
+  programs.i3status.enable = true;
   xsession.windowManager.i3.config = {
-    bars = [
-      {
-        position = "top";
-        statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-top.toml";
-      }
+    bars = [ 
+	{
+		position = "top";
+		statusCommand = "${pkgs.i3status}/bin/i3status"; 
+        }
     ];
   };
 

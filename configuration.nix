@@ -13,9 +13,8 @@ in {
     ];
 
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "off"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -31,19 +30,7 @@ in {
   time.timeZone = "Europe/Paris";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "fr_FR.UTF-8";
 
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "fr_FR.UTF-8";
-    LC_IDENTIFICATION = "fr_FR.UTF-8";
-    LC_MEASUREMENT = "fr_FR.UTF-8";
-    LC_MONETARY = "fr_FR.UTF-8";
-    LC_NAME = "fr_FR.UTF-8";
-    LC_NUMERIC = "fr_FR.UTF-8";
-    LC_PAPER = "fr_FR.UTF-8";
-    LC_TELEPHONE = "fr_FR.UTF-8";
-    LC_TIME = "fr_FR.UTF-8";
-  };
 
   # Configure keymap in X11
   services.xserver = {
@@ -75,14 +62,31 @@ in {
     };
   };
 
-  # Configure console keymap
-  console.keyMap = "fr";
+  environment.systemPackages = with pkgs; [ discord ];
+
+  # Enable sound with pipewire.
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nasm = {
     isNormalUser = true;
     description = "nasm";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "libvirtd" "docker" 
+                    "wheel" "video" "audio" "disk" "networkmanager" 
+       ];
+  };
+
+  # use docker without Root access (Rootless docker)
+  virtualisation.docker.rootless = {
+     enable = true;
+     setSocketVariable = true;
   };
 
   # Allow unfree packages
@@ -103,6 +107,15 @@ in {
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
+  #services.devmon.enable = true ;
+  #services.gvfs.enable = true ;
+  #services.udisks2.enable = true ;
+
+  virtualisation.docker.enable = true;
+  virtualisation.libvirtd.enable = true;
+  boot.kernelModules = [ "kvm-amd" "kvm-intel" ];
+
+
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
@@ -111,6 +124,29 @@ in {
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  # Configure console keymap
+  console.keyMap = "fr";
+  fonts.packages = [ pkgs.d2coding ];
+
+  i18n = {
+   extraLocaleSettings = {
+      LC_ADDRESS = "fr_FR.UTF-8";
+      LC_IDENTIFICATION = "fr_FR.UTF-8";
+      LC_MEASUREMENT = "fr_FR.UTF-8";
+      LC_MONETARY = "fr_FR.UTF-8";
+      LC_NAME = "fr_FR.UTF-8";
+      LC_NUMERIC = "fr_FR.UTF-8";
+      LC_PAPER = "fr_FR.UTF-8";
+      LC_TELEPHONE = "fr_FR.UTF-8";
+      LC_TIME = "fr_FR.UTF-8";
+    };
+    defaultLocale = "fr_FR.UTF-8";
+    inputMethod = {
+      enabled = "kime";
+      kime.daemonModules = [ "Xim" ];
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
