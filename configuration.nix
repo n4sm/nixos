@@ -17,7 +17,21 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "off"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.wireless.iwd.enable = true;
+
+  networking.wireless.iwd.settings = {
+    IPv6 = {
+      Enabled = true;
+    };
+    Settings = {
+      AutoConnect = true;
+    };
+  };
+
+
+  networking.networkmanager.wifi.backend = "iwd";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -30,7 +44,6 @@ in {
   time.timeZone = "Europe/Paris";
 
   # Select internationalisation properties.
-
 
   # Configure keymap in X11
   services.xserver = {
@@ -62,23 +75,52 @@ in {
     };
   };
 
-  environment.systemPackages = with pkgs; [ discord ];
+  environment.systemPackages = with pkgs; [ pavucontrol discord ];
+
+  #sound.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  #hardware.pulseaudio.enable = true;
+  #hardware.pulseaudio.package = pkgs.pulseaudioFull;
+  #hardware.pulseaudio.support32Bit = true;
+
+  /*sound.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+    support32Bit = true;
+  };*/
+
+
+  #services.blueman.enable = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
+    #alsa.enable = true;
+    #alsa.support32Bit = true;
     pulse.enable = true;
   };
 
+  /*services.pipewire.enable = true;
+  services.pipewire.audio.enable = true;
+  services.pipewire.pulse.enable = true;
+  services.pipewire.alsa.enable = true;
+  services.pipewire.wireplumber.enable = true;*/
+
+  /*security.rtkit.enable = true;
+  services.pipewire = {
+  enable = true;
+  alsa = {
+    enable = true;
+    support32Bit = true;
+  };
+  pulse.enable = true;
+  };
+*/
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nasm = {
     isNormalUser = true;
     description = "nasm";
-    extraGroups = [ "libvirtd" "docker" 
+    extraGroups = [ "libvirtd" "docker" "pipewire" 
                     "wheel" "video" "audio" "disk" "networkmanager" 
        ];
   };
@@ -115,8 +157,10 @@ in {
   virtualisation.libvirtd.enable = true;
   boot.kernelModules = [ "kvm-amd" "kvm-intel" ];
 
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
 
-  # Enable the OpenSSH daemon.
+  # Enable the OpenSSH daemon
   # services.openssh.enable = true;
 
   # Open ports in the firewall.

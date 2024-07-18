@@ -17,8 +17,7 @@
     gcc
     gdb
     ungoogled-chromium
-    pavucontrol
-    
+  
     # gui packages 
     rofi
     font-awesome
@@ -28,7 +27,8 @@
     ghidra
     obs-studio
     mpv
-
+    audacity
+    shotcut
 
     d2coding
     xorg.libxcb.dev
